@@ -16,7 +16,7 @@ const Tag = ({name}) => {
 
   const tagColor = colors.find(item => item.name === name).color;
   return (
-    <div className={`${style[tagColor]} text-white px-4 py-1 rounded-xl`} >
+    <div className={`${style[tagColor]} text-white px-4 py-1 rounded-xl mr-2`} >
       {name}
     </div>
   );

@@ -1,18 +1,51 @@
-import Form from "./components/Form";
+'use client'
+
 import Column from "./components/Column";
+import { GraphQLClient, gql } from 'graphql-request'
+import { useEffect, useState } from "react";
 
 export default function Home() {
-  const mockData = [
-    {title: 'Première carte', describe: 'Première description du futur', tags: ['Web', 'Bug'], date: '19/06/2023', owner: 'Ben'},
-    {title: 'Deuxième carte', describe: 'Deuxième description du futur', tags: ['Design'], date: '05/06/2023', owner: 'Johanna'},
-    {title: 'Troisième carte', describe: 'Troisième description du futur', tags: ['Web', 'POC'], date: '20/06/2023', owner: 'Kévin'},
-    {title: 'Quatrième carte', describe: 'Quatrième description du futur', tags: ['UX'], date: '10/06/2023', owner: 'Ben'},
-    {title: 'Cinquième carte', describe: 'Cinquième description du futur', tags: ['Web', 'Tests'], date: '20/06/2023', owner: 'Louis'},
-    {title: 'Sixième carte', describe: 'Sixième description du futur', tags: ['DevOps'], date: '02/06/2023', owner: 'Kévin'},
-  ]
+
+  const [ data, setData ] = useState([]);
+  
+  useEffect(()=> {
+    const getData = async () => {
+      const document = gql`
+        {
+          columns {
+            id
+            name
+            cards {
+              id
+              title
+              user {
+                id
+                name
+              }
+              tags {
+                id
+                name
+              }
+              date
+              describe
+            }
+          }
+        }
+      `
+  
+      const client = new GraphQLClient("http://localhost:3000/api/graphql")
+      const response = await client.request(document);
+
+      setData(response.columns);
+    };
+
+    getData().catch(console.error);
+    
+  }, []);
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between px-3 py-10">
-      <Column title={'To do'} cardData={mockData} />
+    <main className="flex min-h-screen flex-col justify-between px-3 py-10 lg:flex-row lg:py-20 lg:px-16 lg:space-x-8">
+      {data.length > 0 && data.map((col) => <Column key={`columns${col.id}`} title={col.name} cardData={col.cards} /> )}
     </main>
   )
 }
