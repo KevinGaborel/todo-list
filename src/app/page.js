@@ -33,7 +33,9 @@ export default function Home() {
         }
       `
   
-      const client = new GraphQLClient("http://localhost:3000/api/graphql")
+      const client = new GraphQLClient("http://localhost:3000/api/graphql", {
+        method: 'GET'
+      })
       const response = await client.request(document);
 
       setData(response.columns);

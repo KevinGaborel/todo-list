@@ -1,5 +1,7 @@
 // Next.js Custom Route Handler: https://nextjs.org/docs/app/building-your-application/routing/router-handlers
-import { createYoga, createSchema } from 'graphql-yoga'
+import { createYoga, createSchema } from 'graphql-yoga';
+import { useSofa } from '@graphql-yoga/plugin-sofa'
+
 
 const usersData = [
   { id: 1, name: 'Ben' },
@@ -17,6 +19,20 @@ const tagsData = [
   { id: 6, name: 'Tests' },
   { id: 7, name: 'DevOps' }
 ];
+
+const TagList = {
+  add(name) {
+    
+    const tag = {
+      id: parseInt(8),
+      name: name,
+    }
+ 
+    tagsData.push(tag)
+ 
+    return tag
+  }
+}
 
 const columnsData = [
   { id: 1, name: 'À faire' },
@@ -76,6 +92,25 @@ const cardsData = [
   },
 ];
 
+const CardsInColumn = {
+  add(title, describe, tagIds, userId, columnId, date) {
+    
+    const card = {
+      id: parseInt(7),
+      title: title,
+      describe: describe,
+      tags: tagIds.map(value => parseInt(value)),
+      user: parseInt(userId),
+      column: parseInt(columnId),
+      date: date
+    }
+ 
+    cardsData.push(card)
+ 
+    return card
+  }
+}
+
 const { handleRequest } = createYoga({
   schema: createSchema({
     typeDefs: /* GraphQL */ `
@@ -111,6 +146,24 @@ const { handleRequest } = createYoga({
         columns: [Column!]!
         cards: [Card!]!
       }
+
+      type Mutation {
+        createCard(
+          title: String!
+          describe: String
+          tagIds: [ID!]!
+          userId: ID!
+          columnId: ID!
+          date: String!
+        ): Card   
+        
+        createTag(name: String!): Tag
+      }
+
+      schema {
+        query: Query
+        mutation: Mutation
+      }
     `,
     resolvers: {
       Query: {
@@ -135,6 +188,18 @@ const { handleRequest } = createYoga({
           return cardsData.filter((card) => card.column === parent.id);
         },
       },
+      Mutation: {
+        createCard: (parent, { title, describe, tagIds, userId, columnId, date}) => {
+          console.log(title, describe, tagIds, userId, columnId, date);
+          const card = CardsInColumn.add(title, describe, tagIds, userId, columnId, date)
+          return card
+        },
+
+        createTag: (parent, {name}) => {
+          const tag = TagList.add(name);
+          return tag
+        }
+      }
     },
   }),
 

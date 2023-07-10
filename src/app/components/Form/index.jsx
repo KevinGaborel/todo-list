@@ -24,7 +24,9 @@ const Form = ({setShowModal}) => {
         }
       `
   
-      const client = new GraphQLClient("http://localhost:3000/api/graphql")
+      const client = new GraphQLClient("http://localhost:3000/api/graphql", {
+        method: 'GET'
+      });
       const response = await client.request(document);
 
       setData(response);
@@ -34,12 +36,64 @@ const Form = ({setShowModal}) => {
     
   }, []);
 
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    let formData = new FormData(e.target);
+    formData.forEach((value, key) => console.log(`${key}: ${value}`));
+
+    const mutation = gql`
+      mutation (
+        $title: String!, 
+        $userId: ID!, 
+        $columnId: ID!, 
+        $tagIds: [ID!]!, 
+        $date: String!, 
+        $describe: String
+      ){
+        createCard(title: $title, describe: $describe, tagIds: $tagIds, userId: $userId, columnId: $columnId, date: $date) {
+          id
+          title
+          user{
+            id
+            name
+          }
+          describe
+          tags{
+            id
+            name
+          }
+          date
+        }
+      }
+    `
+
+    const newCard = {
+      title: `Inception`,
+      userId: 1, 
+      columnId: 1, 
+      tagIds: [1], 
+      date: '10/05/2021',
+      describe: "test" 
+    }
+
+    const client = new GraphQLClient("http://localhost:3000/api/graphql", {
+        method: 'POST'
+    });
+
+    const response = await client.request(mutation, newCard);
+
+    console.log(response);
+
+  }
+
   return (
     <div className='bg-slate-300 fixed top-0 left-0 z-10 w-screen h-screen flex items-center justify-center'>
  
       <BtnClose setShowModal={setShowModal} />
 
-      <form className='flex flex-col space-y-5 items-center' >
+      <form className='flex flex-col space-y-5 items-center' onSubmit={(e) => handleSubmit(e)} >
         <label htmlFor="taskTitle" className='flex flex-col w-full text-center' >
           <span>Titre de la tâche</span>
           <input type="text" name="taskTitle" id="taskTitle" />
@@ -55,7 +109,7 @@ const Form = ({setShowModal}) => {
           <div className='flex flex-col'>
             {data.tags !== undefined && data.tags.map((tag) =>  
               <label htmlFor={`tag${tag.name}`} key={`tag${tag.id}`} >
-                <input className='mr-2' type="checkbox" name={`tag${tag.name}`} value={tag.id} id={`tag${tag.name}`} />
+                <input className='mr-2' type="checkbox" name={`tag`} value={tag.id} id={`tag${tag.name}`} />
                 <span >{tag.name}</span>
               </label>
             )}
