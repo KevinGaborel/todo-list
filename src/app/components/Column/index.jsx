@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Card from '../Card';
 import Form from '../Form';
 
-const Column = ({title, cardData }) => {
+const Column = ({title, cardData, columnId }) => {
   const [showModal, setShowModal] = useState(false);
 
   return (
@@ -28,7 +28,7 @@ const Column = ({title, cardData }) => {
       </div>
       <button type="button" className='font-semibold mb-16 mt-4' onClick={() => setShowModal(true)} >+ Add task</button>
 
-      {showModal && <Form setShowModal={setShowModal} />}
+      {showModal && <Form setShowModal={setShowModal} columnId={columnId} />}
     </div>
   );
 };

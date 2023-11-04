@@ -47,7 +47,7 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col justify-between px-3 py-10 lg:flex-row lg:py-20 lg:px-16 lg:space-x-8">
-      {data.length > 0 && data.map((col) => <Column key={`columns${col.id}`} title={col.name} cardData={col.cards} /> )}
+      {data.length > 0 && data.map((col) => <Column key={`columns${col.id}`} title={col.name} cardData={col.cards} columnId={col.id} /> )}
     </main>
   )
 }

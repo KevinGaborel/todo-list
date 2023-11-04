@@ -5,7 +5,7 @@ import BtnClose from '../BtnClose';
 import { GraphQLClient, gql } from 'graphql-request'
 
 
-const Form = ({setShowModal}) => {
+const Form = ({setShowModal, columnId}) => {
 
   const [ data, setData ] = useState([]);
   
@@ -40,8 +40,27 @@ const Form = ({setShowModal}) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    let formData = new FormData(e.target);
-    formData.forEach((value, key) => console.log(`${key}: ${value}`));
+    const formElt = document.querySelector('form');
+    const tags = formElt.querySelectorAll('[name="tag"]:checked');
+    let tagsValue = [];
+    for (const tag of tags){
+      tagsValue.push(parseInt(tag.value));
+    }
+    const date = new Date();
+    const dateLocale = date.toLocaleString('fr-FR',{
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric'
+    });
+
+    const newCard = {
+      title: formElt.querySelector('#taskTitle').value, 
+      userId: parseInt(formElt.querySelector('[name="user"]:checked').value), 
+      columnId: parseInt(columnId), 
+      tagIds: tagsValue, 
+      date: dateLocale, 
+      describe: formElt.querySelector('#taskDescribe').value
+    };
 
     const mutation = gql`
       mutation (
@@ -69,15 +88,6 @@ const Form = ({setShowModal}) => {
       }
     `
 
-    const newCard = {
-      title: `Inception`,
-      userId: 1, 
-      columnId: 1, 
-      tagIds: [1], 
-      date: '10/05/2021',
-      describe: "test" 
-    }
-
     const client = new GraphQLClient("http://localhost:3000/api/graphql", {
         method: 'POST'
     });
@@ -85,6 +95,8 @@ const Form = ({setShowModal}) => {
     const response = await client.request(mutation, newCard);
 
     console.log(response);
+
+    setShowModal(false);
 
   }
 

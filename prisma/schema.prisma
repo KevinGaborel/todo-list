@@ -1,0 +1,52 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id    Int     @id @default(autoincrement())
+  username String  @unique
+  card Card[]
+}
+
+model Category {
+  id    Int     @id @default(autoincrement())
+  name String  @unique
+  cards Card_has_category[]
+}
+
+model Column {
+  id    Int     @id @default(autoincrement())
+  name String
+  card Card[]
+}
+
+model Card {
+  id        Int     @id @default(autoincrement())
+  name     String
+  user User @relation(fields: [userId], references: [id])
+  userId   Int
+  column Column @relation(fields: [columnId], references: [id])
+  columnId Int
+  describe String
+  categories Card_has_category[]
+  createdAt DateTime  @default(now())
+  updated_at DateTime?
+}
+
+model Card_has_category {
+  category Category @relation(fields: [categoryId], references: [id])
+  categoryId   Int
+  card   Card @relation(fields: [cardId], references: [id])
+  cardId  Int
+
+  @@id([categoryId, cardId])
+}
