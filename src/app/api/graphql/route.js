@@ -1,7 +1,28 @@
 // Next.js Custom Route Handler: https://nextjs.org/docs/app/building-your-application/routing/router-handlers
 import { createYoga, createSchema } from 'graphql-yoga';
-import { useSofa } from '@graphql-yoga/plugin-sofa'
 
+import UserModel from '../userModel';
+//import { PrismaClient } from '@prisma/client'
+// import UserModel from '../userModel';
+
+//const prisma = new PrismaClient()
+// use `prisma` in your application to read and write data in your DB
+
+const getUsers = async () => {
+  //const users = await prisma.user.findMany();
+  //console.log(users);
+  // await prisma.$disconnect()
+
+  const member = await UserModel.find();
+  const test = await UserModel.showData('Kévin');
+
+  console.log(test);
+  console.log(member);
+
+  //return users;
+}
+
+getUsers();
 
 const usersData = [
   { id: 1, name: 'Ben' },
@@ -22,14 +43,14 @@ const tagsData = [
 
 const TagList = {
   add(name) {
-    
+
     const tag = {
       id: parseInt(8),
       name: name,
     }
- 
+
     tagsData.push(tag)
- 
+
     return tag
   }
 }
@@ -80,7 +101,7 @@ const cardsData = [
     tags: [1,6],
     column: 2,
     date: '20/06/2023'
-  },  
+  },
   {
     id: 6,
     title: 'Sixième carte',
@@ -94,7 +115,7 @@ const cardsData = [
 
 const CardsInColumn = {
   add(title, describe, tagIds, userId, columnId, date) {
-    
+
     const card = {
       id: parseInt(7),
       title: title,
@@ -104,9 +125,9 @@ const CardsInColumn = {
       column: parseInt(columnId),
       date: date
     }
- 
+
     cardsData.push(card)
- 
+
     return card
   }
 }
@@ -118,18 +139,18 @@ const { handleRequest } = createYoga({
         id: ID!
         name: String!
       }
-    
+
       type Tag {
         id: ID!
         name: String!
       }
-    
+
       type Column {
         id: ID!
         name: String!
         cards: [Card!]!
       }
-    
+
       type Card {
         id: ID!
         title: String!
@@ -139,7 +160,7 @@ const { handleRequest } = createYoga({
         date: String!
         describe: String
       }
-    
+
       type Query {
         users: [User!]!
         tags: [Tag!]!
@@ -155,8 +176,8 @@ const { handleRequest } = createYoga({
           userId: ID!
           columnId: ID!
           date: String!
-        ): Card   
-        
+        ): Card
+
         createTag(name: String!): Tag
       }
 

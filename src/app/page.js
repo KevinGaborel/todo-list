@@ -4,6 +4,7 @@ import Column from "./components/Column";
 import { GraphQLClient, gql } from 'graphql-request'
 import { useEffect, useState } from "react";
 
+
 export default function Home() {
 
   const [ data, setData ] = useState([]);

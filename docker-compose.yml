@@ -2,24 +2,54 @@ version: '3.1'
 
 services:
   db:
-    image: postgres
-    volumes:
-      - sql_data:/var/lib/postgres
+    image: postgres:latest
     restart: always
-    environment:
-      POSTGRES_PASSWORD_FILE: /run/secrets/my_secret
-    ports:
-      - 5432:5432
     secrets:
       - my_secret
+    volumes:
+      - sql_data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    environment:
+      POSTGRES_PASSWORD_FILE: /run/secrets/my_secret
+      # POSTGRES_PASSWORD: js4life
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+      # DATABASE_URL: ${DATABASE_URL}
+      # POSTGRES_HOST_AUTH_METHOD: trust
+    expose:
+      - 5432
+    ports:
+      - 5432:5432
 
   adminer:
     image: adminer
     restart: always
     ports:
       - 8080:8080
+
+  # app:
+  #   build:
+  #     context: .
+  #     target: runner
+  #   network_mode: bridge
+  #   ports:
+  #     - "3000:3000"
+  #   expose:
+  #     - 3000
+  #   depends_on:
+  #     - db
+  #   links:
+  #     - db
+  #   environment:
+  #     POSTGRES_PASSWORD: js4life
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_DB: postgres
+  #     DATABASE_URL: ${DATABASE_URL}
+  #   command: npm run start
+
 volumes:
-  sql_data: {}
+  sql_data:
 secrets:
   my_secret:
     file: ./my_secret.txt
