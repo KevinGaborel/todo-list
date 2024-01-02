@@ -1,23 +1,22 @@
 // Next.js Custom Route Handler: https://nextjs.org/docs/app/building-your-application/routing/router-handlers
 import { createYoga, createSchema } from 'graphql-yoga';
 
-import UserModel from '../userModel';
-//import { PrismaClient } from '@prisma/client'
-// import UserModel from '../userModel';
+import { PrismaClient } from '@prisma/client'
 
-//const prisma = new PrismaClient()
+const prisma = new PrismaClient()
 // use `prisma` in your application to read and write data in your DB
 
 const getUsers = async () => {
+  const firstUser = await prisma.user.create({
+    data: {
+      username: 'Kévin',
+    },
+  })
   //const users = await prisma.user.findMany();
-  //console.log(users);
+  const user = await prisma.user.findFirst();
+  console.log(user);
   // await prisma.$disconnect()
 
-  const member = await UserModel.find();
-  const test = await UserModel.showData('Kévin');
-
-  console.log(test);
-  console.log(member);
 
   //return users;
 }
