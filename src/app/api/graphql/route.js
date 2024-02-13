@@ -9,13 +9,13 @@ const prisma = new PrismaClient()
 const getUsers = async () => {
   const firstUser = await prisma.user.create({
     data: {
-      username: 'Kévin',
+      username: 'Ben',
     },
   })
-  //const users = await prisma.user.findMany();
+
+  const users = await prisma.user.findMany();
   const user = await prisma.user.findFirst();
-  console.log(user);
-  // await prisma.$disconnect()
+  console.log("le user: ", user, users);
 
 
   //return users;

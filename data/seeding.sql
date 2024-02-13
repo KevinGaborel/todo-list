@@ -1,7 +1,7 @@
 BEGIN;
 
 
-INSERT INTO "category" ("name") VALUES
+INSERT INTO "Category" ("name") VALUES
     ('Web'),
     ('POC'),
     ('UX'),
@@ -10,19 +10,19 @@ INSERT INTO "category" ("name") VALUES
     ('Tests'),
     ('DevOps');
 
-INSERT INTO "user" ("username") VALUES
+INSERT INTO "User" ("username") VALUES
     ('Ben'),
     ('Johanna'),
     ('Kévin'),
     ('Louis');
 
-INSERT INTO "column" ("name") VALUES
+INSERT INTO "Column" ("name") VALUES
     ('À faire'),
     ('En cours'),
     ('Terminé');
 
     
-INSERT INTO "card" ("name", "userId", "columnId", "describe") VALUES
+INSERT INTO "Card" ("name", "userId", "columnId", "describe") VALUES
     ('Première carte', 1, 1, 'First task'),
     ('Deuxième carte', 2, 2, 'Second task'),
     ('Troisième carte', 3, 3, 'Task'),
@@ -30,7 +30,7 @@ INSERT INTO "card" ("name", "userId", "columnId", "describe") VALUES
     ('Cinquième carte', 1, 1, 'Task'),
     ('Sixième carte', 2, 2, 'Task');
 
-INSERT INTO "card_has_category" ("card_id", "category_id") VALUES
+INSERT INTO "Card_has_category" ("cardId", "categoryId") VALUES
     (1, 1),
     (1, 2),
     (2, 2),

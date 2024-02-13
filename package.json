@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@graphql-yoga/plugin-sofa": "^2.0.3",
-    "@prisma/client": "^5.5.2",
+    "@prisma/client": "^5.8.0",
     "autoprefixer": "10.4.14",
     "dotenv": "^16.3.1",
     "encoding": "^0.1.13",
@@ -21,7 +21,6 @@
     "graphql-yoga": "^4.0.3",
     "next": "13.4.6",
     "node-fetch": "^3.3.2",
-    "pg": "^8.11.3",
     "postcss": "8.4.24",
     "react": "18.2.0",
     "react-dom": "18.2.0",
